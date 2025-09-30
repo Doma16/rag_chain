@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>RAG documents</title>
+</head>
+
+<body>
+    <h1>{{ message }}</h1><br>
+    <a href="/login">Login</a>
+    <a id="logout" href="/">Logout</a>
+
+    <script>
+        document.getElementById("logout").addEventListener("logout", async (e) => {
+            const res = await fetch("/logout", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(null)
+            })
+        });
+    </script>
+
+</body>
+
+</html>

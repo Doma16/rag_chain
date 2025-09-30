@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Register</title>
+</head>
+
+<body>
+    <h1>Register</h1>
+    <p id="error" style="color: red;"></p>
+    <p id="success" style="color: green;"></p>
+
+    <form id="register_form" action="/register" method="post">
+        <label>Username:</label>
+        <input type="text" id="username" required /><br>
+
+        <label>Password:</label>
+        <input type="password" id="password" required /><br>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <script>
+        document.getElementById("register_form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            document.getElementById("error").innerText = "";
+            document.getElementById("success").innerText = "";
+
+            const data = {
+                username: document.getElementById("username").value,
+                password: document.getElementById("password").value
+            };
+
+
+            try {
+                const res = await fetch("/register", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const res_json = await res.json();
+
+                if (!res.ok) {
+                    document.getElementById("error").innerText = res_json.detail;
+                } else {
+                    document.getElementById("success").innerText = res_json.detail;
+                    setTimeout(() => {
+                        window.location.href = "/";
+                    }, 1000);
+                }
+
+            } catch (err) {
+                document.getElementById("error").innerText = "Network error!";
+            }
+        });
+    </script>
+
+    <p>Already have an account? <a href="/login">Login here</a></p>
+</body>
+
+</html>
