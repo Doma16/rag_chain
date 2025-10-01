@@ -6,12 +6,26 @@
 </head>
 
 <body>
+    {% include "homebar.html" %}
+
     <h1>{{ message }}</h1><br>
+    {% if not payload %}
     <a href="/login">Login</a>
-    <a id="logout" href="/">Logout</a>
+    {% endif %}
+    <a id="logout" href="/">Logout</a> <br>
+
+    {% if payload %}
+    
+    <a href="/documents">My docs.</a> <br>
+    <a href="/documents/upload">Upload doc.</a> <br>
+    <a href="/documents/query">Query doc.</a> <br>
+
+    {% endif %}
 
     <script>
-        document.getElementById("logout").addEventListener("logout", async (e) => {
+        document.getElementById("logout").addEventListener("click", async (e) => {
+            e.preventDefault();
+
             const res = await fetch("/logout", {
                 method: "POST",
                 headers: {
@@ -19,6 +33,11 @@
                 },
                 body: JSON.stringify(null)
             })
+
+            setTimeout(() => {
+                window.location.href = "/";
+            }, 1000);
+
         });
     </script>
 

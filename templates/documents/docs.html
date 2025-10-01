@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>File List</title>
+</head>
+
+<body>
+    {% include "homebar.html" %}
+
+    <h2>Available Files</h2>
+    <ul>
+        {% for file in files %}
+        <li><a href="/documents/{{ file[1] }}">{{ file[0] }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <div>
+        {% if page > 1 %}
+        <a href="/documents?page={{ page-1 }}&page_size={{ page_size }}">Previous</a>
+        {% endif %}
+        [ {{page}} ]
+        {% if page * page_size < total %}
+            <a href="/documents?page={{ page+1 }}&page_size={{ page_size }}">Next</a>
+        {% endif %}
+    </div>
+
+</body>
+
+</html>

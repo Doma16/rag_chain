@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Upload Document</title>
+</head>
+
+<body>
+    {% include "homebar.html" %}
+
+    <h1>Upload Document</h1>
+
+    <p id="error" style="color: red;"></p>
+    <p id="success" style="color: green;"></p>
+
+    <hr>
+
+    <form id="upload_form" action="/documents/upload" method="post">
+        <label for="file">Choose a file:</label>
+        <input type="file" id="filepath" namex="file" required />
+
+        <button type="submit">Upload</button>
+    </form>
+
+    <hr>
+
+    <form id="upload_custom" action="/documents/upload" method="post">
+        <label>Custom document</label><br>
+        <label>Filename:</label>
+        <input type="name" id="filename" required /><br>
+        <textarea id="content" name="content" rows="10" cols="60"
+            placeholder="Paste or type your document here..."></textarea><br><br><br>
+
+        <button type="submit">Custom upload</button>
+    </form>
+
+    <hr>
+
+    <script>
+        document.getElementById("upload_form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            
+            const file = document.getElementById("filepath").files[0];
+            
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+                const content = event.target.result;
+                
+                try {
+                    
+                    console.log("here\n");
+                    console.log(content, file.name);
+
+                    const res = await fetch("/documents/upload", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ filename: file.name, content: content })
+                    })
+
+                    const res_json = await res.json();
+
+                    if (!res.ok) {
+                        document.getElementById("error").innerText = res_json.detail;
+                    } else {
+                        document.getElementById("success").innerText = res_json.detail;
+                        setTimeout(() => {
+                            window.location.href = "/";
+                        }, 1000);
+                    }
+
+                } catch (err) {
+                    console.log(err);
+                    document.getElementById("error").innerText = "Network error!";
+                }
+            };
+
+            reader.readAsText(file);
+
+        });
+
+        document.getElementById("upload_custom").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const data = {
+                filename: document.getElementById("filename").value,
+                content: document.getElementById("content").value
+            }
+
+            try {
+                const res = await fetch("/documents/upload", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const res_json = await res.json();
+                if (!res.ok) {
+                    document.getElementById("error").innerText = res_json.detail;
+                } else {
+                    document.getElementById("success").innerText = res_json.detail;
+                    setTimeout(() => {
+                        window.location.href = "/documents";
+                    }, 1000);
+                }
+            } catch (err) {
+                console.log(err);
+                document.getElementById("error").innerText = "Network error!";
+            }
+
+        });
+    </script>
+
+</body>
+
+</html>

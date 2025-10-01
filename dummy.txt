@@ -1,0 +1,9 @@
+Podatkovni skup Cityscapes [2] je poznati skup koji se koristi u podruˇcju raˇcunalnog
+vida, posebno za zadatke semantiˇcke segmentacije i razumijevanja urbanih scena. Ovaj
+skup podataka sastoji se od visokokvalitetnih, ruˇcno anotiranih slika u stvarnim uvje-
+tima vožnje u urbanim Njemaˇckim sredinama. Cityscapes ukljuˇcuje 5000 slika s finim
+anotacijama, od kojih su napravljeni skupovi za treniranje, validaciju i testiranje. Re-
+dom ti skupovi imaju 2975, 500 i 1525 slika. Slike su u rezoluciji 2048x1024 piksela.
+Anotacije su napravljene na razini piksela, što znaˇci da svaka klasa poput automobi-
+la, pješaka, prometnih znakova i ceste imaju precizno oznaˇcene granice. Tako ¯der zbog
+naših potreba anotacije su dostupne i u formatu poligona

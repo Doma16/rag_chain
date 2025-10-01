@@ -8,14 +8,25 @@ class User(SQLModel, table=True):
     username: str
     password: str
 
-class UserCreate(BaseModel):
+class Document(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(index=True)
+    filename: str
+    content: str
+
+class UserQuery(BaseModel):
     username: str
     password: str
+
+class UserPayLoad(BaseModel):
+    username: str
+    exp: int
 
 class UserRead(BaseModel):
     id: int
     username: str
+    password: str
 
-class Token(BaseModel):
-    access_token: str
-    token_type: str
+class DocumentQuery(BaseModel):
+    filename: str
+    content: str
