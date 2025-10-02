@@ -1,7 +1,7 @@
 from sqlmodel import create_engine, Session, select
 from database.models import User, Document
 from database.models import UserQuery, UserPayLoad, UserRead  # noqa: F401
-from database.models import DocumentQuery  # noqa: F401
+from database.models import DocumentQuery, QueryString  # noqa: F401
 
 DATABASE_URL = "sqlite:///users.db"
 ENGINE = create_engine(DATABASE_URL, echo=True)

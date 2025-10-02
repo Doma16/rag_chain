@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>RAG Query</title>
+    <style>
+        body {
+            max-width: 600px;
+            margin: 50px auto;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+
+        .response {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    {% include "homebar.html" %}
+
+    <p id="error" style="color: red;"></p>
+    <p id="success" style="color: green;"></p>
+
+    <h2>Ask a Query</h2>
+    <form id="query_form" method="post">
+        <textarea id="query" name="query" placeholder="Enter your question here"></textarea><br><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="response" class="response">
+        <p></p>
+        <ul></ul>
+    </div>
+
+    <script>
+        document.getElementById("query_form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const data = {
+                query: document.getElementById("query").value
+            };
+
+            try {
+
+                const res = await fetch("/documents/query", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                })
+
+                const res_json = await res.json();
+
+                if (!res.ok) {
+                    document.getElementById("error").innerText = res_json.detail;
+                } else {
+                    document.getElementById("response").children[0].innerText = res_json.response;
+                    var const_list = document.getElementById("response").children[1];
+                    for (const doc of res_json.docs) {
+                        var li = document.createElement("li")
+                        var a = document.createElement("a");
+                        a.href = "/documents/d/";
+                        a.textContent = doc;
+                        a.target = "_blank";
+                        li.append(a);
+                        const_list.append(li);
+                    }
+
+                }
+
+            } catch (err) {
+                console.log(err);
+                document.getElementById("error").innerText = "Network error!"
+            }
+
+        });
+    </script>
+
+
+</body>
+
+</html>

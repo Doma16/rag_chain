@@ -3,10 +3,13 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from sqlmodel import Session
 from fastapi.templating import Jinja2Templates
 
+from rag import process_query, split_document, add_document
+
 from database import (
     get_session,
     DocumentQuery,
     Document,
+    QueryString,
     get_user_documents,
     get_document,
 )
@@ -57,7 +60,9 @@ def upload_doc(request: Request, session: Session = Depends(get_session)):
     token = get_token_or_redirect(request)
     user = get_user(session, token)
 
-    return templates.TemplateResponse("upload.html", context={"request": request})
+    return templates.TemplateResponse(
+        "upload.html", context={"request": request, "username": user.username}
+    )
 
 
 @router.post("/upload", response_class=JSONResponse)
@@ -76,6 +81,10 @@ def upload_doc_post(
     session.commit()
     session.refresh(db_doc)
 
+    docs = split_document(doc.content)
+    for doc in docs:
+        add_document(user.id, doc)
+
     return JSONResponse(
         status_code=200,
         content={
@@ -85,7 +94,7 @@ def upload_doc_post(
     )
 
 
-@router.get("/{doc_id}")
+@router.get("/d/{doc_id}")
 def get_doc_id(request: Request, doc_id: int, session: Session = Depends(get_session)):
     token = get_token_or_redirect(request)
     user = get_user(session, token)
@@ -103,8 +112,28 @@ def get_doc_id(request: Request, doc_id: int, session: Session = Depends(get_ses
 
 
 @router.get("/query", response_class=HTMLResponse)
-def query_doc(): ...
+def query_doc(request: Request, session: Session = Depends(get_session)):
+    token = get_token_or_redirect(request)
+    user = get_user(session, token)
+
+    return templates.TemplateResponse(
+        "query_docs.html", context={"request": request, "username": user.username}
+    )
 
 
 @router.post("/query", response_class=JSONResponse)
-def query_doc_post(): ...
+async def query_doc_post(
+    request: Request, query: QueryString, session: Session = Depends(get_session)
+):
+    token = get_token_or_redirect(request)
+    user = get_user(session, token)
+
+    response, docs = await process_query(user.id, query.query)
+
+    return JSONResponse(
+        status_code=200,
+        content={
+            "response": response,
+            "docs": [doc.page_content for doc in docs],
+        },
+    )

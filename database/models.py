@@ -30,3 +30,6 @@ class UserRead(BaseModel):
 class DocumentQuery(BaseModel):
     filename: str
     content: str
+
+class QueryString(BaseModel):
+    query: str
