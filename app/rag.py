@@ -5,12 +5,12 @@ from langchain_ollama import OllamaLLM
 from langchain.chains.retrieval_qa.prompt import PROMPT
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
-K = 10
+K = 5
 MODEL_NAME = "llama3"
 LLM = OllamaLLM(model=MODEL_NAME)
 TEXT_SPLITTER = RecursiveCharacterTextSplitter(
-    chunk_size=200,
-    chunk_overlap=0,
+    chunk_size=2000,
+    chunk_overlap=200,
     add_start_index=True,
 )
 

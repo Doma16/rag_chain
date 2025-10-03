@@ -6,10 +6,10 @@ import faiss
 import os
 
 
-MODEL_NAME = "llama3"
+MODEL_NAME = "bge-m3"
 BASE_DIR = "vector_db_dir"
 EMBEDDING_MODEL = OllamaEmbeddings(model=MODEL_NAME)
-EMB_DIMENSION = 4096
+EMB_DIMENSION = len(EMBEDDING_MODEL.embed_query(""))
 os.makedirs(BASE_DIR, exist_ok=True)
 
 

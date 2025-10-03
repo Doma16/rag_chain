@@ -15,7 +15,7 @@ from database import (
 )
 from user import get_user
 
-templates = Jinja2Templates("templates/documents")
+templates = Jinja2Templates("app/templates/documents")
 router = APIRouter(prefix="/documents")
 
 
@@ -83,6 +83,7 @@ def upload_doc_post(
 
     docs = split_document(doc.content)
     for doc in docs:
+        doc.metadata["doc_id"] = db_doc.id
         add_document(user.id, doc)
 
     return JSONResponse(
@@ -95,7 +96,13 @@ def upload_doc_post(
 
 
 @router.get("/d/{doc_id}")
-def get_doc_id(request: Request, doc_id: int, session: Session = Depends(get_session)):
+def get_doc_id(
+    request: Request,
+    doc_id: int,
+    start_index: int = Query(None, ge=0),
+    start_length: int = Query(0, ge=0),
+    session: Session = Depends(get_session),
+):
     token = get_token_or_redirect(request)
     user = get_user(session, token)
     doc = get_document(session, doc_id)
@@ -105,9 +112,16 @@ def get_doc_id(request: Request, doc_id: int, session: Session = Depends(get_ses
             status_code=303, detail="Redirect", headers={"Location": "/documents"}
         )
 
+    filename = doc.filename
+    content = doc.content
+    if start_index:
+        end_index = start_index + start_length
+        filename += f" From: {start_index} To: {end_index}"
+        content = "...\n" + content[start_index:end_index] + "\n..."
+
     return templates.TemplateResponse(
         "doc_page.html",
-        context={"request": request, "filename": doc.filename, "content": doc.content},
+        context={"request": request, "filename": filename, "content": content},
     )
 
 
@@ -134,6 +148,14 @@ async def query_doc_post(
         status_code=200,
         content={
             "response": response,
-            "docs": [doc.page_content for doc in docs],
+            "docs": [
+                (
+                    f"{idx}. {doc.page_content[:10]}...",
+                    doc.metadata["doc_id"],
+                    doc.metadata["start_index"],
+                    len(doc.page_content),
+                )
+                for idx, doc in enumerate(docs)
+            ],
         },
     )

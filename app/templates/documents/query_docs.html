@@ -66,11 +66,13 @@
                 } else {
                     document.getElementById("response").children[0].innerText = res_json.response;
                     var const_list = document.getElementById("response").children[1];
+                    const_list.innerHTML = "";
+
                     for (const doc of res_json.docs) {
                         var li = document.createElement("li")
                         var a = document.createElement("a");
-                        a.href = "/documents/d/";
-                        a.textContent = doc;
+                        a.href = "/documents/d/" + doc[1] + "?start_index=" + doc[2] + "&start_length=" + doc[3];
+                        a.textContent = doc[0];
                         a.target = "_blank";
                         li.append(a);
                         const_list.append(li);
