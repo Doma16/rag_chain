@@ -6,7 +6,7 @@ from langchain.chains.retrieval_qa.prompt import PROMPT
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 K = 5
-MODEL_NAME = "llama3"
+MODEL_NAME = "llama3.2"
 LLM = OllamaLLM(model=MODEL_NAME)
 TEXT_SPLITTER = RecursiveCharacterTextSplitter(
     chunk_size=2000,

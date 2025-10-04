@@ -1,0 +1,7 @@
+FROM ollama/ollama
+
+COPY ollama_entrypoint.sh /ollama_entrypoint.sh
+
+EXPOSE 11434
+
+ENTRYPOINT ["/ollama_entrypoint.sh"]

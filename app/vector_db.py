@@ -9,16 +9,16 @@ import os
 MODEL_NAME = "bge-m3"
 BASE_DIR = "vector_db_dir"
 EMBEDDING_MODEL = OllamaEmbeddings(model=MODEL_NAME)
-EMB_DIMENSION = len(EMBEDDING_MODEL.embed_query(""))
+EMB_DIMENSION = 1024 #len(EMBEDDING_MODEL.embed_query(""))
 os.makedirs(BASE_DIR, exist_ok=True)
 
 
-def get_user_index(user_id: int):
+def get_user_index_path(user_id: int) -> str:
     return os.path.join(BASE_DIR, f"user_index_{user_id}")
 
 
-def load_or_create_index(user_id: int):
-    path = get_user_index(user_id)
+def load_or_create_index(user_id: int) -> FAISS:
+    path = get_user_index_path(user_id)
     if os.path.exists(path):
         return FAISS.load_local(
             path, EMBEDDING_MODEL, allow_dangerous_deserialization=True
@@ -34,7 +34,7 @@ def load_or_create_index(user_id: int):
 
 
 def save_index(user_id: int, faiss_index: FAISS):
-    path = get_user_index(user_id)
+    path = get_user_index_path(user_id)
     faiss_index.save_local(path)
 
 
@@ -44,9 +44,8 @@ def add_document(user_id: int, doc: Document):
     save_index(user_id, faiss_index)
 
 
-def query_documents(faiss_index: FAISS, query: str, k: int = 3):
-    docs = faiss_index.similarity_search(query, k=k)
-    return docs
+def query_documents(faiss_index: FAISS, query: str, k: int = 3) -> list[Document]:
+    return faiss_index.similarity_search(query, k=k)
 
 
 if __name__ == "__main__":

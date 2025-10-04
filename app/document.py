@@ -15,7 +15,7 @@ from database import (
 )
 from user import get_user
 
-templates = Jinja2Templates("app/templates/documents")
+templates = Jinja2Templates("templates/documents")
 router = APIRouter(prefix="/documents")
 
 

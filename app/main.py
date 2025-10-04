@@ -15,7 +15,7 @@ from document import router as document_router
 from jwt import create_token, read_token
 
 app = FastAPI(on_startup=[lambda: SQLModel.metadata.create_all(get_engine())])
-templates = Jinja2Templates("app/templates")
+templates = Jinja2Templates("templates")
 
 app.include_router(document_router)
 

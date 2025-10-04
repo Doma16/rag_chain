@@ -3,7 +3,7 @@ import requests
 import argparse
 
 URL = "http://127.0.0.1:8000/"
-NUMBER_OF_DOCS = 100
+NUMBER_OF_DOCS = 30
 
 
 def login(username, password):
