@@ -72,6 +72,8 @@ App won't start **before the downloads are complete**. Once the models are fully
 ```bash
 docker exec rag_chain-app-1 bash -c "export PYTHONPATH=. && python data/auto_populate.py --username <username> --password <password>"
 ```
+This uploads 30 documents from 20newsgroup dataset where each document
+is considered to be under a category of talk.politics.misc, rec.autos etc.
 
 After you uploaded documents you may 
 go to:
