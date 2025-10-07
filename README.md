@@ -52,7 +52,7 @@ Everything is almost ready!
 > - `bge-m3` (1.2 GB)  
 
 
-You can use the app for simple tasks like registration and login **before the downloads are complete**. Once the models are fully downloaded, you can start using the app normally.
+App won't start **before the downloads are complete**. Once the models are fully downloaded, you can start using the app normally.
 
 ---
 
