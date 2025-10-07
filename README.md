@@ -77,7 +77,7 @@ is considered to be under a category of talk.politics.misc, rec.autos etc.
 
 After you uploaded documents you may 
 go to:
-- App query path: [http://localhost:8000/query](http://localhost:8000/query)  
+- App query path: [http://localhost:8000/documents/query](http://localhost:8000/documents/query)  
 Response might be slow since ollama is running on cpu.
 
 ---
