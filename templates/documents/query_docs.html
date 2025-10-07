@@ -21,6 +21,26 @@
             background: #f0f0f0;
             border-radius: 5px;
         }
+
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 
@@ -31,6 +51,9 @@
     <p id="success" style="color: green;"></p>
 
     <h2>Ask a Query</h2>
+    <div id="spinner" style="display:none; text-align:center; margin-top:10px;">
+        <div class="loader"></div>
+    </div>
     <form id="query_form" method="post">
         <textarea id="query" name="query" placeholder="Enter your question here"></textarea><br><br>
         <button type="submit">Submit</button>
@@ -48,6 +71,10 @@
             const data = {
                 query: document.getElementById("query").value
             };
+
+            const spinner = document.getElementById("spinner");
+            
+            spinner.style.display = "block";
 
             try {
 
@@ -83,6 +110,8 @@
             } catch (err) {
                 console.log(err);
                 document.getElementById("error").innerText = "Network error!"
+            } finally {
+                spinner.style.display = "none";
             }
 
         });
